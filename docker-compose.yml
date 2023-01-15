@@ -1,6 +1,6 @@
 services:
   pictures-api:
-    image: awesome/webapp
+    image: picture_api
     ports:
       - "80"
 

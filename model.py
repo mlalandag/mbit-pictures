@@ -54,10 +54,12 @@ def list_images(min_date, max_date, tags):
     elif min_date is None and max_date is not None:
         sql_where = sql_where + f""" and p.date < '{max_date}' """        
     elif min_date is not None and max_date is None:
-        sql_where = sql_where + f""" and p.date > '{min_date}' """        
+        sql_where = sql_where + f""" and p.date > '{min_date}' """   
         
     if tags is not None:
         sql_where = sql_where + f""" and tag IN ('{tags}') """
+
+    print(f"""sql = {sql_query + sql_where}""" )
 
     list_images = []
     with engine.connect() as conn:        
