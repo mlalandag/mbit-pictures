@@ -1,18 +1,19 @@
-from flask import Blueprint, request
 from . import controller
+from flask import Blueprint, request, make_response
 
-bp = Blueprint('pictures', __name_, url_prefix='/')
+bp = Blueprint('pictures', __name__, url_prefix='/')
 
-
-@app.post("/images/tags")
+@bp.post("/images/tags")
 def get_tags():
-    min_confidence = int(request.args.get("min_confidence"))
+    min_confidence = request.args.get("min_confidence")
     print(min_confidence)
     
     # input checks
     print("input checks")
     if min_confidence is None:
         min_confidence = 80
+    else:
+        min_confidence = int(min_confidence)
     
     if not request.is_json or "data" not in request.json:
         return make_response({"description": "Debes incluir el audio en base64 como un campo llamado data en el body"}, 400)
@@ -22,7 +23,7 @@ def get_tags():
     return response
     
 
-@app.get("/images")
+@bp.get("/images")
 def list_images():
     min_date = request.args.get("min_date")
     if min_date is not None:
@@ -43,10 +44,10 @@ def list_images():
 
     return response        
 
-@app.get("/images/{i}")
+@bp.get("/images/{i}")
 def get_image():
     return None
 
-@app.get("/images/tags")
+@bp.get("/images/tags")
 def list_tags():
     return None

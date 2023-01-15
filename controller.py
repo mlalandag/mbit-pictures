@@ -1,4 +1,9 @@
-from . import models
+from . import model
+from flask import request, make_response
+from imagekitio import ImageKit
+import requests
+import uuid
+import json
 
 
 def get_tags(min_confidence, b64str):
@@ -13,9 +18,9 @@ def get_tags(min_confidence, b64str):
     # Usamos imagekit.io para subir la imagen a la nube de forma pública.
     print("Usamos imagekit.io para subir la imagen a la nube de forma pública")
     imagekit = ImageKit(
-        public_key = credentials.public_key,
-        private_key = credentials.private_key,
-        url_endpoint = credentials.url_endpoint
+        public_key = credentials["public_key"],
+        private_key = credentials["private_key"],
+        url_endpoint = credentials["url_endpoint"]
     )
     
     upload_info = imagekit.upload(file=b64str, file_name=image_name)
@@ -23,8 +28,8 @@ def get_tags(min_confidence, b64str):
     
     # Usamos https://imagga.com/ para extraer tags a partir de la imagen subida anteriormente.
     print("Usamos https://imagga.com/ para extraer tags a partir de la imagen subida anteriormente")
-    api_key = credentials.api_key
-    api_secret = credentials.api_secret
+    api_key = credentials["api_key"]
+    api_secret = credentials["api_secret"]
     image_url = upload_info.url
     print(f"image_url = {image_url}")
 
@@ -46,15 +51,16 @@ def get_tags(min_confidence, b64str):
     
     # Almacenamos en una carpeta determinada la imagen
     print("Almacenamos en una carpeta determinada la imagen")
-    path = "pictures/images/" + image_name
+    path = "images/" + image_name
     text_file = open(path, "w")
     text_file.write(b64str)
     text_file.close()
 
-    return models.pictures.get_tags(path, tags)
+    # Devolvemos respuesta
+    return model.get_tags(path, tags, image_name)
  
 
 
 def list_images(min_date, max_date, tags):
 
-    return models.pictures.list_images(min_date, max_date, tags)
+    return model.list_images(min_date, max_date, tags)

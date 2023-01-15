@@ -1,6 +1,7 @@
+from datetime import datetime
+from sqlalchemy import create_engine
 
-
-def get_tags(min_confidence, b64str):
+def get_tags(min_confidence, tags, image_name):
 
     # Almacenamos información en la base de datos
     print("Almacenamos información en la base de datos")
@@ -30,9 +31,10 @@ def get_tags(min_confidence, b64str):
                 '{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}')
             """)
             
+     # TODO size
     return {
         "id": picture_id,
-        "size": len(b64str),
+        "size": 0,
         "date": picture_date,
         "tags": tags
     }
