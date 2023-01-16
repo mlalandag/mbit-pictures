@@ -1,8 +1,10 @@
 services:
   pictures-api:
-    image: picture_api
+    #build: .
+    image: pictures_api:1.0.0
     ports:
       - "80"
+    #command: waitress-serve --call "pictures_api:create_app"
 
   db:
     image: mysql:8.0
