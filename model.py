@@ -5,7 +5,7 @@ def get_tags(min_confidence, tags, image_name):
 
     # Almacenamos información en la base de datos
     print("Almacenamos información en la base de datos")
-    engine = create_engine("mysql+pymysql://mbit:mbit@localhost/Pictures")
+    engine = create_engine("mysql+pymysql://mbit:mbit@db/Pictures")
     
     # Tabla Pictures
     with engine.connect() as conn:
@@ -42,7 +42,7 @@ def get_tags(min_confidence, tags, image_name):
 
 def list_images(min_date, max_date, tags):
     # Recuperamos lista de imagenes
-    engine = create_engine("mysql+pymysql://mbit:mbit@localhost/Pictures")
+    engine = create_engine("mysql+pymysql://mbit:mbit@db/Pictures")
 
     # Query Base Pictures
     sql_query = """SELECT * FROM pictures p INNER JOIN tags t ON t.picture_id = p.id """

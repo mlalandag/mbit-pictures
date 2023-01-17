@@ -3,7 +3,7 @@ services:
     #build: .
     image: pictures_api:1.0.0
     ports:
-      - "80"
+      - "8080:8080"
     #command: waitress-serve --call "pictures_api:create_app"
 
   db:
