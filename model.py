@@ -33,11 +33,7 @@ def get_tags(path, tags):
             """)
             
         # Obtenemos el tamaño del fichero
-        print("Obtenemos el tamaño del fichero:")
-        image_file = open(picture_path, "r")
-        picture_length = len(image_file.read())
-        image_file.close()
-
+        picture_length = get_image_length(picture_path)
 
     return {
         "id": picture_id,
@@ -71,13 +67,30 @@ def list_images(min_date, max_date, tags):
     list_images = []
     with engine.connect() as conn:        
         result = conn.execute(sql_query + sql_where)
+        id = 0
+        list_tags = []
         for row in result:
-            image = {
-                "id": row[0],
-                "size": 0,  #TODO
-                "date": row[2],
-                "tags": None  # TODO 
-            }
-            list_images.append(image)
+            if row[0] != id and id > 0:
+                list_images.append(prepare_image_data(row, list_tags))
+                list_tags = []
+            tag = {"tag": row[3], "confidence": row[5]}
+            list_tags.append(tag)
+        list_images.append(prepare_image_data(row, list_tags))
 
     return list_images
+
+def prepare_image_data(row, list_tags):
+    print("Preparamos los datos de la imagen")
+    image = {
+        "id": row[0],
+        "size": get_image_length(row[1]),
+        "date": row[2],
+        "tags": list_tags
+    }
+
+def get_image_length(path):
+    print("Obtenemos el tamaño del fichero")
+    image_file = open(path, "r")
+    picture_length = len(image_file.read())
+    image_file.close()
+    return picture_length
