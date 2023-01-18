@@ -4,6 +4,7 @@ from imagekitio import ImageKit
 import requests
 import uuid
 import json
+import os
 
 
 def get_tags(min_confidence, b64str):
@@ -56,8 +57,8 @@ def get_tags(min_confidence, b64str):
     text_file.write(b64str)
     text_file.close()
 
-    # Devolvemos respuesta
-    return model.get_tags(path, tags, image_name)
+    # Almacenamos en BBDD y Devolvemos respuesta
+    return model.get_tags(path, tags)
  
 
 

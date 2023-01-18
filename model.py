@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import create_engine
 
-def get_tags(min_confidence, tags, image_name):
+def get_tags(path, tags):
 
     # Almacenamos información en la base de datos
     print("Almacenamos información en la base de datos")
@@ -10,18 +10,19 @@ def get_tags(min_confidence, tags, image_name):
     # Tabla Pictures
     with engine.connect() as conn:
         result = conn.execute(f"""INSERT INTO pictures (path, date)
-        VALUES ('{image_name}','{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}')
+        VALUES ('{path}','{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}')
         """)
     
     # Tabla Tags
         # Recuperamos id
         picture_id = 0
         result = conn.execute(f"""
-        SELECT id, date FROM pictures WHERE path = '{image_name}'
+        SELECT id, path, date FROM pictures WHERE path = '{path}'
         """)
         for row in result:
             picture_id = row[0]
-            picture_date = row[1]
+            picture_path = row[1]
+            picture_date = row[2]
             print("id:", row[0])
     
         for tag in tags:
@@ -31,10 +32,16 @@ def get_tags(min_confidence, tags, image_name):
                 '{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}')
             """)
             
-     # TODO size
+        # Obtenemos el tamaño del fichero
+        print("Obtenemos el tamaño del fichero:")
+        image_file = open(picture_path, "r")
+        picture_length = len(image_file.read())
+        image_file.close()
+
+
     return {
         "id": picture_id,
-        "size": 0,
+        "size": picture_length,
         "date": picture_date,
         "tags": tags
     }
