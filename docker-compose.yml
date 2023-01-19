@@ -1,10 +1,12 @@
 services:
   pictures-api:
-    #build: .
+    build: .
     image: pictures_api:1.0.0
     ports:
       - "8080:8080"
     #command: waitress-serve --call "pictures_api:create_app"
+    volumes:
+      - pictures_data:/pictures_api/images
 
   db:
     image: mysql:8.0
@@ -23,4 +25,6 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 volumes:
   db:
+    driver: local
+  pictures_data:
     driver: local
