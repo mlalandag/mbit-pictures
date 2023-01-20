@@ -48,7 +48,7 @@ def list_images(min_date, max_date, tags):
     engine = create_engine("mysql+pymysql://mbit:mbit@db/Pictures")
 
     # Query Base Pictures
-    sql_query = """SELECT * FROM pictures p INNER JOIN tags t ON t.picture_id = p.id """
+    sql_query = """SELECT * FROM pictures p INNER JOIN tags t ON t.picture_id = p.id ORDER BY p.id"""
     
     # Construimos where clausule en funcion de query params
     sql_where = ""
@@ -68,28 +68,39 @@ def list_images(min_date, max_date, tags):
     with engine.connect() as conn:        
         result = conn.execute(sql_query + sql_where)
         id = 0
+        first_time = True
         list_tags = []
         for row in result:
-            if row[0] != id and id > 0:
-                list_images.append(prepare_image_data(row, list_tags))
+            print(f"""Tratamos row '{row}'""")
+            if first_time:
+                id = row[0]
+            if row[0] != id and not first_time:
+                print(f"""id ha cambiado '{id}'""")
+                list_images.append(prepare_image_data(current_id, current_path, current_date, list_tags))
                 list_tags = []
+                id = row[0]
+            current_id = row[0]
+            current_path = row[1]
+            current_date = row[2]
             tag = {"tag": row[3], "confidence": row[5]}
             list_tags.append(tag)
-        list_images.append(prepare_image_data(row, list_tags))
+            first_time = False
+        list_images.append(prepare_image_data(current_id, current_path, current_date, list_tags))
 
     return list_images
 
-def prepare_image_data(row, list_tags):
-    print("Preparamos los datos de la imagen")
+def prepare_image_data(current_id, current_path, current_date, list_tags):
+    print(f"""Preparamos los datos de la imagen '{id}'""")
     image = {
-        "id": row[0],
-        "size": get_image_length(row[1]),
-        "date": row[2],
+        "id": current_id,
+        "size": get_image_length(current_path),
+        "date": current_date,
         "tags": list_tags
     }
+    return image
 
 def get_image_length(path):
-    print("Obtenemos el tamaño del fichero")
+    print(f"""Obtenemos el tamaño del fichero '{path}'""")
     image_file = open(path, "r")
     picture_length = len(image_file.read())
     image_file.close()
