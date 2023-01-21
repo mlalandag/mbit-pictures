@@ -1,5 +1,6 @@
 from datetime import datetime
 from sqlalchemy import create_engine
+import base64
 
 def get_tags(path, tags):
 
@@ -102,6 +103,8 @@ def prepare_image_data(current_id, current_path, current_date, list_tags):
 def get_image_length(path):
     print(f"""Obtenemos el tamaño del fichero '{path}'""")
     image_file = open(path, "r")
-    picture_length = len(image_file.read())
+    print("Pasamos la imagen a binario")
+    binary_image_file = base64.b64decode(image_file.read())
+    picture_length = len(binary_image_file)
     image_file.close()
     return picture_length
