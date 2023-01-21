@@ -37,17 +37,28 @@ def list_images():
     tags = request.args.get("tags")
     if tags is not None:
         tags = "'" + tags.replace(",", "','") + "'"
-        print("tags: ", min_date)
+        print("tags: ", tags)
 
 
     response = controller.list_images(min_date, max_date, tags)
 
     return response        
 
-@bp.get("/images/{i}")
-def get_image():
-    return None
+@bp.get("/images/<id>")
+def get_image(id):
+    response = controller.get_image(id)
+    return response
 
 @bp.get("/images/tags")
 def list_tags():
-    return None
+    min_date = request.args.get("min_date")
+    if min_date is not None:
+        min_date.replace("%20", " ")
+        print("min_date: ", min_date)   
+    max_date = request.args.get("max_date")
+    if max_date is not None:
+        max_date.replace("%20", " ")
+        print("max_date: ", max_date)      
+    print("max_date: ", min_date)  
+    response = controller.list_tags(min_date, max_date)
+    return response
