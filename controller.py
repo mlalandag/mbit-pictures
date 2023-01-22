@@ -13,7 +13,7 @@ def get_tags(min_confidence, b64str):
     print(f"image_name = {image_name}")
 
     # Obtenemos credenciales
-    with open("credentials.json") as f:
+    with open("pictures_api/credentials.json") as f:
         credentials = json.load(f)
 
     # Usamos imagekit.io para subir la imagen a la nube de forma pública.
@@ -52,7 +52,7 @@ def get_tags(min_confidence, b64str):
     
     # Almacenamos en una carpeta determinada la imagen
     print("Almacenamos en una carpeta determinada la imagen")
-    path = "images/" + image_name
+    path = "pictures_api/images/" + image_name
     text_file = open(path, "w")
     text_file.write(b64str)
     text_file.close()

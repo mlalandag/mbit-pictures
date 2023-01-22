@@ -36,6 +36,7 @@ def list_images():
     print("max_date: ", min_date)   
     tags = request.args.get("tags")
     if tags is not None:
+        tags = tags.replace("%20", " ")
         tags = "'" + tags.replace(",", "','") + "'"
         print("tags: ", tags)
 

@@ -62,9 +62,9 @@ def list_images(min_date, max_date, tags):
         
     if tags is not None:
         if len(sql_where) > 0:
-            sql_where = sql_where + f""" and t.tag IN ({tags}) """
+            sql_where = sql_where + f""" and t.tag IN ('{tags}') """
         else:
-            sql_where = f""" where t.tag IN ({tags}) """
+            sql_where = f""" where t.tag IN ('{tags}') """
 
     sql_query_order_by =   """ ORDER BY p.id """
 
@@ -133,6 +133,7 @@ def get_image(id):
 
         id = 0
         list_tags = []
+        image = {}
         for row in result:
             print(f"""Tratamos row '{row}'""")
             id = row[0]
